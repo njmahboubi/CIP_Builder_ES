@@ -195,3 +195,43 @@ dd { margin: 0.3rem 0 0; font-size: 1.5rem; color: var(--dark-blue); font-weight
   .plan4learning-destination { break-after: avoid; padding: .3rem .5rem; font-size: 8pt; }
   .cip-block-title { break-after: avoid; }
 }
+
+/* Dedicated intervention guide follows the existing form/output palette. */
+.intervention-summary p { margin-top: 0; font-weight: 700; }
+.intervention-config { border: 1px solid var(--border); border-radius: .4rem; padding: 1.25rem; margin-block: 1.5rem; }
+.intervention-config summary { color: var(--dark-blue); cursor: pointer; font-weight: 700; }
+.intervention-config .field-grid { margin-top: 1.5rem; }
+.intervention-config textarea { width: 100%; font: inherit; border: 1px solid #8c9aaf; border-radius: .3rem; padding: .65rem .8rem; resize: vertical; }
+.intervention-section-nav { display: flex; flex-wrap: wrap; gap: .7rem 1.25rem; margin-block: 1.5rem; }
+.intervention-section-nav a { color: var(--blue); }
+.intervention-entry + .intervention-entry { border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1.5rem; }
+.intervention-entry h4 { color: var(--dark-blue); margin-block: .5rem; }
+.intervention-entry p { margin-block: .5rem; }
+.intervention-scope { display: inline-block; font-size: .75rem; font-weight: 700; padding: .2rem .5rem; margin-bottom: 0; background: var(--light-blue); color: var(--dark-blue); }
+.scope-campus-data { background: #edf5ee; color: #285334; }
+.scope-verify { background: #fff3d6; color: #684b0c; }
+.intervention-action { font-size: .9rem; }
+.intervention-table { min-width: 58rem; }
+.intervention-table-2 { min-width: 0; }
+.intervention-entry[data-scope="VERIFY — CAMPUS-SPECIFIC"] .intervention-scope,
+.intervention-entry[data-scope="DOCUMENT / DATE REQUIRED"] .intervention-scope { background: #fff3d6; color: #684b0c; }
+.verification-checklist { list-style: none; padding: 0; }
+.verification-checklist label { display: flex; align-items: flex-start; gap: .65rem; font-weight: 400; margin-bottom: .5rem; }
+.verification-checklist input[type="checkbox"] { width: 1.1rem; min-height: 1.1rem; height: 1.1rem; margin-top: .2rem; flex-shrink: 0; padding: 0; }
+.campus-date-editor { margin-top: 1rem; max-width: 34rem; }
+.campus-date-editor button { margin-top: .75rem; }
+.intervention-table-5 { table-layout: fixed; }
+.intervention-table-5 th:nth-child(1) { width: 32%; }
+.intervention-table-5 th:nth-child(2) { width: 15%; }
+.intervention-table-5 th:nth-child(3) { width: 16%; }
+.intervention-table-5 th:nth-child(4) { width: 23%; }
+.intervention-table-5 th:nth-child(5) { width: 14%; }
+@media print {
+  .intervention-summary, .intervention-config, .intervention-section-nav, #intervention-copy-status { display: none !important; }
+  .campus-date-editor { display: none !important; }
+  .verification-checklist label::before { content: "[ ]"; }
+  .verification-checklist label:has(input:checked)::before { content: "[x]"; }
+  #intervention-output:not([hidden]) { display: block !important; }
+  .intervention-entry { break-inside: auto; }
+  .intervention-entry h4, .intervention-scope, .intervention-action { break-after: avoid; }
+}

@@ -9,6 +9,8 @@
   <script src="js/data.js" defer></script>
   <script src="js/generator.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/intervention.js" defer></script>
+  <script src="js/intervention-ui.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -21,9 +23,13 @@
     <div class="page-intro">
       <p class="eyebrow">Campus improvement planning</p>
       <h1>Elementary CIP Builder</h1>
-      <p class="intro">Enter campus baselines and program information once. Targets come from district configuration; you will not be asked to create them.</p>
+      <p class="intro">Select a campus to review its published TEA baselines, then enter local measures and program information. Targets come from district configuration.</p>
       <p class="privacy-note">Use aggregate campus data only. Do not enter student-level or personally identifiable information. Your entries stay in this tab and clear when you refresh.</p>
     </div>
+    <aside id="intervention-summary" class="notice intervention-summary" hidden aria-label="Selected campus intervention requirement">
+      <p id="intervention-requirement" role="status"></p>
+      <button id="open-intervention-guide" class="button-secondary" type="button">TIP/TAP Entry Guide</button>
+    </aside>
     <noscript><p class="notice">Enable JavaScript in your browser to use this form.</p></noscript>
     <p id="loading-message" class="notice">Loading the campus form. If it does not appear, check that the JavaScript files are available.</p>
     <form id="cip-form" novalidate autocomplete="off" hidden>
@@ -31,7 +37,7 @@
         <ol id="progress-steps" class="steps"></ol>
       </nav>
       <div class="form-card">
-        <p id="step-status" class="eyebrow" role="status">Step 1 of 8 · Campus Information</p>
+        <p id="step-status" class="eyebrow" role="status">Step 1 of 5 · Campus Information</p>
         <section class="form-step" data-step="campus" aria-labelledby="campus-heading">
           <h2 id="campus-heading" tabindex="-1">Campus Information</h2>
           <p class="section-intro">Choose one campus. Its name will be reused throughout your plan.</p>
@@ -44,26 +50,27 @@
             <p id="campus_name-error" class="field-error" hidden></p>
             <p id="campus-id-status" class="field-help" role="status">Campus ID: <strong id="campus-id-value">Select a campus first</strong></p>
           </div>
-        </section>
-        <section class="form-step" data-step="demographics" aria-labelledby="demographics-heading" hidden>
-          <h2 id="demographics-heading" tabindex="-1">Demographics</h2>
-          <p class="section-intro">Enter current aggregate campus measures. Percentages use a 0–100 scale. Targets are supplied by the district.</p>
-          <div id="demographics-fields" class="field-grid"></div>
-        </section>
-        <section class="form-step" data-step="academic" aria-labelledby="academic-heading" hidden>
-          <h2 id="academic-heading" tabindex="-1">Academic / Accountability</h2>
-          <p class="section-intro">Copy the official reported accountability results. Enter Reading and Mathematics baselines only; the district sets their targets.</p>
-          <div id="academic-fields" class="field-grid"></div>
+          <section id="campus-baseline-review" hidden aria-labelledby="published-baselines-heading">
+            <h3 id="published-baselines-heading">Published Campus Baselines</h3>
+            <p class="field-help">Published planning baselines show the underlying source year, not live SIS values. VERIFY baselines can be resolved during final quality review and do not prevent generation. Bingman's PK/paired-campus overall rating does not establish individual-domain ratings or K-5 applicability.</p>
+            <div class="table-scroll" role="region" aria-label="Selected campus published TEA baselines" tabindex="0">
+              <table class="review-table">
+                <caption>Published baseline review for the selected campus</caption>
+                <thead><tr><th scope="col">Measure</th><th scope="col">Published Baseline</th><th scope="col">Source</th></tr></thead>
+                <tbody id="campus-published-baselines"></tbody>
+              </table>
+            </div>
+            <details id="baseline-local-overrides" class="intervention-config">
+              <summary>Optional verified local baselines</summary>
+              <p class="field-help">Only unresolved measures are editable. Leave blank to retain VERIFY. Use the exact campus measure and confirm its source/year; do not substitute targets, averages, Masters or all-grade data for Grade 3 Meets+.</p>
+              <div id="baseline-fields" class="field-grid"></div>
+            </details>
+          </section>
         </section>
         <section class="form-step" data-step="pk2" aria-labelledby="pk2-heading" hidden>
           <h2 id="pk2-heading" tabindex="-1">PK-2 Growth</h2>
           <p class="section-intro">Identify each approved assessment, its scale, and the BOY reporting period, then enter its aggregate campus baseline. EOY targets remain district-controlled.</p>
           <div id="pk2-fields" class="field-grid"></div>
-        </section>
-        <section class="form-step" data-step="climate" aria-labelledby="climate-heading" hidden>
-          <h2 id="climate-heading" tabindex="-1">Attendance / Climate</h2>
-          <p class="section-intro">Enter the reported chronic absenteeism rate and the 2025-26 OSS rate. Stakeholder perception information comes from district configuration. Attendance / ADA is reused from Demographics.</p>
-          <div id="climate-fields" class="field-grid"></div>
         </section>
         <section class="form-step" data-step="implementation" aria-labelledby="implementation-heading" hidden>
           <h2 id="implementation-heading" tabindex="-1">Implementation</h2>
@@ -77,7 +84,7 @@
         </section>
         <section class="form-step" data-step="review" aria-labelledby="review-heading" hidden>
           <h2 id="review-heading" tabindex="-1">Review campus baselines and district targets</h2>
-          <p class="section-intro">Check each entered baseline/current value beside its district target. Use Back to make changes. Targets cannot be edited in this form.</p>
+          <p class="section-intro">Review published baselines and local entries beside their district targets. Published values show their source year. Use Back to change local entries. Targets cannot be edited in this form.</p>
           <div class="review-campus">
             <span class="field-help">Selected campus</span>
             <p id="review-campus-name"></p>
@@ -105,11 +112,11 @@
               </table>
             </div>
           </section>
-          <p class="review-legend"><strong>User-entered values</strong> appear in the middle column. <span class="fixed-label">Fixed district targets</span> and <span class="pending-label">district targets pending confirmation</span> appear in the right column.</p>
+          <p class="review-legend"><strong>Published baselines and local entries</strong> appear in the middle column; published values include their source year. <span class="fixed-label">Fixed district targets</span> and <span class="pending-label">district targets pending confirmation</span> appear in the right column.</p>
           <div class="table-scroll review-table-region" role="region" aria-label="Campus baseline and district target review" tabindex="0">
             <table class="review-table">
               <caption>Campus values and district-controlled targets</caption>
-              <thead><tr><th scope="col">Metric / Information</th><th scope="col">Baseline / Current Value<br><small>Entered by campus</small></th><th scope="col">District Target<br><small>Read-only configuration</small></th></tr></thead>
+              <thead><tr><th scope="col">Metric / Information</th><th scope="col">Published Baseline / Local Value<br><small>Source shown for published values</small></th><th scope="col">District Target<br><small>Read-only configuration</small></th></tr></thead>
               <tbody id="review-metrics"></tbody>
             </table>
           </div>
@@ -147,6 +154,26 @@
         <p class="notice">Destinations follow the source CIP headings. Where exact field names are unverified, labels use the closest section-level destination; confirm the controls in your Plan4Learning instance. Goal copies separate their narrative parts, objectives and strategies. Tables copy as plain text with tab-separated columns. Personnel and application-only requirements are completed directly in district systems.</p>
         <div id="guide-sections"></div>
       </div>
+    </section>
+    <section id="intervention-output" aria-labelledby="intervention-heading" hidden>
+      <div class="output-header">
+        <div><p class="eyebrow">2026-27 Elementary &middot; Plan4Learning</p><h2 id="intervention-heading" tabindex="-1">Plan4Learning TIP/TAP Entry Guide</h2><p id="intervention-campus" class="intro"></p></div>
+        <div class="output-actions"><button id="intervention-back" type="button" class="button-secondary">Back to Builder</button><button id="intervention-print" type="button" class="button-primary">Print / Save Guide as PDF</button></div>
+      </div>
+      <p class="notice">Working entry guide. DISTRICT STANDARD: use the shared planned response. CAMPUS DATA: loaded for this campus. VERIFY: confirm the fact or evidence before entry. Section order follows the supplied Plan4Learning workflow; confirm exact controls in your campus module. This guide does not certify assurances or submit a plan.</p>
+      <details id="intervention-config" class="intervention-config">
+        <summary>District confirmation inputs &middot; enter once for this tab</summary>
+        <p class="field-help">Confirmed entries propagate to applicable Elementary campuses in this tab. Verify that shared values apply to each campus, especially costs, grade span and schedules. Blank values remain District confirmation required. Use approved aggregate information only. Refresh clears all entries.</p>
+        <form id="intervention-district-form" novalidate autocomplete="off">
+          <div id="intervention-district-fields" class="field-grid"></div>
+          <p id="intervention-config-error" class="field-error" role="alert" hidden></p>
+          <button class="button-primary" type="submit">Apply Confirmed District Values</button>
+          <p id="intervention-config-status" class="field-help" role="status"></p>
+        </form>
+      </details>
+      <p id="intervention-copy-status" class="field-help" role="status" aria-live="polite"></p>
+      <nav id="intervention-section-nav" class="intervention-section-nav" aria-label="TIP/TAP guide sections"></nav>
+      <div id="intervention-sections"></div>
     </section>
   </main>
   <footer class="container site-footer"><p>Beaumont ISD · Elementary campus planning · Version 1</p></footer>

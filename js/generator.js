@@ -745,12 +745,31 @@
     questionValues.campus_name = campus;
 
     config.CAMPUS_FIELDS.filter(field => field.enabled === true).forEach(field => {
+      // Published records are authoritative by configured CDCN; stale/forged
+      // form values cannot replace them. Not Rated is never coerced to zero.
+      const published = config.getPublishedBaseline(selected.campus_id, field.id);
+      const info = config.getBaselineReview(selected.campus_id, field.id);
+      if (info?.status === "not applicable") {
+        values[field.id] = info.text;
+        questionValues[field.id] = info.text;
+        if (field.stateKey) values[field.stateKey] = info.text;
+        return;
+      }
+      if (published) {
+        const formatted = published.value === null ? info.text : String(published.value) + (field.type === "percentage" ? "%" : "");
+        values[field.id] = formatted;
+        questionValues[field.id] = formatted;
+        if (field.stateKey) values[field.stateKey] = formatted;
+        if (published.value === null) addPending(field.id, field.label + " — VERIFY / not included in this preload", "Published baseline verification");
+        return;
+      }
       const raw = field.stateKey ? state[field.stateKey] : state.optional && state.optional[field.id];
       const absent = raw === undefined || raw === null || String(raw).trim() === "";
       if (absent && field.required) throw new Error("Missing required campus value: " + field.label);
       if (absent) {
-        values[field.id] = MARKER;
-        questionValues[field.id] = MARKER;
+        values[field.id] = info?.text || MARKER;
+        questionValues[field.id] = values[field.id];
+        if (field.stateKey) values[field.stateKey] = values[field.id];
         addPending(field.id, field.label, "Campus value");
         return;
       }
@@ -833,7 +852,7 @@
     const year = district.school_year;
     const baselineYear = String(district.baseline_year);
     const endYear = String(Number(year.slice(0, 4)) + 1);
-    const known = key => value(key) !== MARKER;
+    const known = key => value(key) !== MARKER && !pending.has(key);
     const minimum = key => {
       const target = district.targets[key];
       let text = value(key).replace("%+", "%");
@@ -857,10 +876,14 @@
     // Protected Board/root-cause/action/Title I/SCE/intervention text is verbatim.
     const fixed = id => para(editableOpenings.has(id) ? personalize(SOURCE.paragraphs[id]) : SOURCE.paragraphs[id]);
     const list = ids => ({ type: "list", items: ids.map(id => editableOpenings.has(id) ? personalize(SOURCE.paragraphs[id]) : SOURCE.paragraphs[id]) });
-    const metricLine = (label, field) => para(label + ": " + value(field) + ".");
+    const baselineValue = field => {
+      const published = config.REVIEW_BASELINE_FIELDS.includes(field) && config.getPublishedBaseline(selected.campus_id, field);
+      return value(field) + (published ? " (" + published.sourceLabel + ")" : "");
+    };
+    const metricLine = (label, field) => para(label + ": " + baselineValue(field) + ".");
     function fill(text, keys) {
       let index = 0;
-      const result = text.replace(/\[[^\]]+\]/g, () => value(keys[index++]));
+      const result = text.replace(/\[[^\]]+\]/g, () => baselineValue(keys[index++]));
       if (index !== keys.length) throw new Error("Narrative/source mapping mismatch.");
       return personalize(result);
     }
@@ -875,6 +898,10 @@
         const override = targetOverrides[id] && targetOverrides[id][r + ":" + c];
         return override ? value(override) : typeof cell === "string" ? cell : value(cell.field);
       }));
+      SOURCE.tables[id].forEach((row, index) => {
+        const publishedCell = row.find(cell => typeof cell === "object" && config.getPublishedBaseline(selected.campus_id, cell.field));
+        if (publishedCell) rows[index][0] += " — " + config.getPublishedBaseline(selected.campus_id, publishedCell.field).sourceLabel;
+      });
       const suspensionRows = [
         ["2025-26 Out-of-School Suspension (OSS) rate", value("oss_baseline_pct"), value("oss_target")]
       ];
@@ -900,7 +927,9 @@
     }
     const demographics = [
       fixed("P024"), sourceTable("T06", "Demographics campus metrics"),
-      para(fill(SOURCE.narratives.P050, [
+      { type: "table", caption: "Published TEA campus baselines", hasHeader: true, rows: [["Measure", "Published Baseline / Local Entry", "Source / Status"], ...config.publicBaselineRows(selected.campus_id,
+        Object.fromEntries(config.CAMPUS_FIELDS.filter(field => field.baselineReview).map(field => [field.id, field.stateKey ? state[field.stateKey] : state.optional?.[field.id]])))] },
+      para(fill(SOURCE.narratives.P050.replace("The campus serves", "The " + config.getPublishedBaseline(selected.campus_id, "enrollment_baseline").sourceLabel + " reports"), [
         "enrollment_baseline","economically_disadvantaged_pct","emergent_bilingual_pct","special_education_pct",
         "attendance_ada_baseline_pct","mobility_baseline_pct","accountability_baseline_display"
       ]))
@@ -923,7 +952,7 @@
       fixed("P070"), sourceTable("T10", "Student Learning campus metrics"),
       metricLine("PK-2 Literacy measure / assessment", "pk2_literacy_measure"),
       metricLine("PK-2 Mathematics measure / assessment", "pk2_math_measure"),
-      para(fill(learningSentences[0], ["reading","math"])),
+      para(selected.grade_configuration === "pk-only" ? "Grade 3 Reading and Mathematics: Not Applicable — campus grade span." : fill(learningSentences[0], ["reading","math"])),
       para(fill(learningSentences[1], ["domain1_baseline_score"])),
       ...learningTargets, fixed("P090_fixed")
     ];
@@ -989,7 +1018,9 @@
       const baseline = subject === "Reading" ? state.reading : state.math;
       const targetKey = subject === "Reading" ? "reading_target" : "math_target";
       if (baseline >= district.targets[targetKey].value) first = first.replace("will increase performance to", "has a district performance target of");
-      const blocks = [para(fill(first, [subject === "Reading" ? "reading" : "math", targetKey]))];
+      const blocks = selected.grade_configuration === "pk-only"
+        ? [para("Grade 3 " + subject + " baseline: Not Applicable — campus grade span."), metricLine("District Grade 3 " + subject + " Meets+ target", targetKey)]
+        : [para(fill(first, [subject === "Reading" ? "reading" : "math", targetKey]))];
       if (known(eoyKey) && known(fidelityKey)) {
         blocks.push(para(fill(parts[1].replace("90%", minimum(fidelityKey)), [baselineKey, eoyKey])));
       } else {
@@ -1120,11 +1151,23 @@
         sourceDefinitions: Object.keys(sourceValues).length
       },
       status: pending.size
-        ? "Working Draft — District confirmation needed for remaining district-controlled targets or fields."
+        ? "Working Draft — Review remaining VERIFY baselines and district-controlled targets or fields."
         : "Working Draft — Review campus entries and district requirements before use.",
       marker: MARKER
     };
   }
 
-  window.BISD_CIP_GENERATOR = Object.freeze({ build });
+  // Shared reference content for the dedicated intervention guide. Return copies
+  // of table rows so guide assembly cannot alter the existing CIP source model.
+  function getInterventionCore() {
+    return {
+      strategy: SOURCE.paragraphs.P515,
+      monitoring: SOURCE.paragraphs.P517,
+      stakeholderEvidence: SOURCE.paragraphs.P478,
+      stakeholderProcess: SOURCE.paragraphs.P482,
+      stakeholderThemes: SOURCE.paragraphs["stakeholder-implications"],
+      actions: ["T23", "T26", "T29", "T32"].flatMap(id => SOURCE.tables[id].slice(1).map(row => row.slice()))
+    };
+  }
+  window.BISD_CIP_GENERATOR = Object.freeze({ build, getInterventionCore });
 })();

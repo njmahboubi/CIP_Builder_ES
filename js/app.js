@@ -10,9 +10,8 @@
   const state = { campus_name: "", campus_id: null, districtCampus: null, reading: null, math: null, optional: Object.create(null) };
   const panels = Array.from(form.querySelectorAll(".form-step"));
   const stepLabels = {
-    campus: "Campus Information", demographics: "Demographics",
-    academic: "Academic / Accountability", pk2: "PK-2 Growth",
-    climate: "Attendance / Climate", implementation: "Implementation",
+    campus: "Campus Information",
+    pk2: "PK-2 Growth", implementation: "Implementation",
     program: "Program / Intervention", review: "Review"
   };
   const reviewIndex = panels.length - 1;
@@ -34,7 +33,6 @@
   const campusControl = document.getElementById("campus_name");
   const controls = new Map();
   const dateOwners = new Map();
-  const displayedFields = [];
   let currentStep = 0;
 
   function register(control, definition, step, approvalDate, dateContainer) {
@@ -87,7 +85,8 @@
   register(campusControl, { type: "campus", required: true, stateKey: "campus_name" }, 0);
 
   function addField(field) {
-    const container = document.getElementById(field.group + "-fields");
+    if (field.publicBaseline) return;
+    const container = document.getElementById(field.baselineReview ? "baseline-fields" : field.group + "-fields");
     const step = panels.findIndex(panel => panel.dataset.step === field.group);
     if (!container || step < 0 || field.enabled !== true) return;
     const wrapper = node("div", undefined, "field");
@@ -146,7 +145,6 @@
     if (field.targetKey || field.sourceTargetNA) wrapper.append(targetDisplay(field));
     wrapper.append(error);
     container.append(wrapper);
-    displayedFields.push(field);
     register(control, field, step, approvalDate, dateContainer);
   }
   config.CAMPUS_FIELDS.forEach(addField);
@@ -158,6 +156,7 @@
   }
   function errorFor(entry) {
     const { control, definition } = entry;
+    if (control.disabled) return "";
     const raw = control.value.trim();
     if (control.validity.badInput) return "Enter a valid number.";
     if (!raw) return definition.required ? "This field is required." : "";
@@ -207,6 +206,10 @@
     else { entry.approvalDate.removeAttribute("required"); entry.approvalDate.value = ""; }
   }
   function save(entry) {
+    if (entry.control.disabled) {
+      delete state.optional[entry.control.id];
+      return;
+    }
     const raw = entry.control.value.trim();
     const numeric = entry.definition.type === "percentage" || entry.definition.type === "number";
     let value = !raw || errorFor(entry) ? null : numeric ? Number(raw) : raw;
@@ -219,6 +222,38 @@
       state.campus_id = campus ? (campus.campus_id || district.pending_value) : null;
       document.getElementById("campus-id-value").textContent = !campus
         ? "Select a campus first" : state.campus_id === district.pending_value ? "District confirmation needed" : state.campus_id;
+      document.getElementById("campus-baseline-review").hidden = !campus;
+      for (const fieldId of config.REVIEW_BASELINE_FIELDS) {
+        const baseline = controls.get(fieldId);
+        const info = config.getBaselineReview(campus?.campus_id, fieldId);
+        if (baseline.campusId !== campus?.campus_id) {
+          baseline.control.value = "";
+          if (baseline.definition.stateKey) state[baseline.definition.stateKey] = null;
+          else delete state.optional[fieldId];
+          baseline.campusId = campus?.campus_id;
+        }
+        const editable = Boolean(campus && info.status === "verify");
+        baseline.control.closest(".field").hidden = !editable;
+        baseline.control.disabled = !editable;
+        baseline.control.required = false;
+        baseline.control.removeAttribute("aria-invalid");
+        document.getElementById(fieldId + "-error").hidden = true;
+        document.getElementById(fieldId + "-help").textContent = info.text + ". Optional: enter only a verified local value for this exact measure; leave blank to retain this flag.";
+      }
+    }
+    if (entry.definition.type === "campus" || entry.definition.baselineReview) renderBaselinePanel();
+  }
+  function renderBaselinePanel() {
+    const localValues = {...state.optional};
+    for (const field of config.CAMPUS_FIELDS.filter(item => item.stateKey)) localValues[field.id] = state[field.stateKey];
+    const body = document.getElementById("campus-published-baselines");
+    body.replaceChildren();
+    for (const [label, value, source] of config.publicBaselineRows(state.campus_id, localValues)) {
+      const row = node("tr");
+      const heading = node("th", label);
+      heading.scope = "row";
+      row.append(heading, node("td", value), node("td", source, "field-help"));
+      body.append(row);
     }
   }
   function captureInput(event) {
@@ -228,8 +263,12 @@
     if (entry.control.hasAttribute("aria-invalid")) validate(entry);
   }
   function formatValue(field) {
+    const info = config.getBaselineReview(state.campus_id, field.id);
+    if (info && info.status !== "verify") return info.text;
+    const published = config.getPublishedBaseline(state.campus_id, field.id);
+    if (published) return info.text;
     const entered = field.stateKey ? state[field.stateKey] : state.optional[field.id];
-    if (entered === null || entered === undefined || entered === "") return "Not provided";
+    if (entered === null || entered === undefined || entered === "") return info?.text || "Not provided";
     if (field.type === "percentage") return entered + "%";
     if (field.format === "currency") return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(entered);
     if (field.type === "select") {
@@ -279,10 +318,12 @@
     });
     const body = document.getElementById("review-metrics");
     body.replaceChildren();
-    displayedFields.forEach(field => {
+    config.CAMPUS_FIELDS.forEach(field => {
       const row = node("tr");
       const label = node("th", field.label); label.setAttribute("scope", "row");
       const baseline = node("td", formatValue(field), "baseline-value");
+      const info = config.getBaselineReview(state.campus_id, field.id);
+      if (info) baseline.append(node("small", info.sourceLabel || (formatValue(field).startsWith("VERIFY") ? "VERIFY" : info.status === "not applicable" ? "NOT APPLICABLE" : "LOCAL ENTRY — verify source and year"), "field-help"));
       const target = targetInfo(field);
       const targetCell = node("td", undefined, "target-" + target.kind);
       targetCell.append(node("strong", target.text));
@@ -316,6 +357,7 @@
     });
     if (firstInvalid) {
       if (firstInvalid.step !== currentStep) showStep(firstInvalid.step);
+      if (firstInvalid.definition.baselineReview) document.getElementById("baseline-local-overrides").open = true;
       focusEntry(firstInvalid); return;
     }
     showStep(currentStep + 1);
@@ -409,7 +451,7 @@
   }
 
   // Clipboard access is user-initiated and local. No server receives the content.
-  async function copySection(text, button, fallback, title) {
+  async function copySection(text, button, fallback, title, statusElement = copyStatus) {
     try {
       let copied = false;
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -423,14 +465,14 @@
         copied = typeof document.execCommand === "function" && document.execCommand("copy");
       }
       if (!copied) {
-        copyStatus.textContent = "Automatic copy is unavailable. The section text is selected below; press Ctrl+C (Command+C on Mac) to copy it.";
+        statusElement.textContent = "Automatic copy is unavailable. The section text is selected below; press Ctrl+C (Command+C on Mac) to copy it.";
         return;
       }
       fallback.hidden = true;
       button.focus();
       button.textContent = "Copied";
       button.setAttribute("aria-label", "Copied " + title);
-      copyStatus.textContent = "Copied " + title + ".";
+      statusElement.textContent = "Copied " + title + ".";
       clearTimeout(copyTimers.get(button));
       copyTimers.set(button, setTimeout(() => {
         button.textContent = "Copy";
@@ -442,9 +484,11 @@
       fallback.value = text;
       fallback.focus();
       fallback.select();
-      copyStatus.textContent = "Select the section text below and press Ctrl+C (Command+C on Mac).";
+      statusElement.textContent = "Select the section text below and press Ctrl+C (Command+C on Mac).";
     }
   }
+
+  window.BISD_CIP_CLIPBOARD = Object.freeze({ copySection });
 
   function renderGuide(items) {
     const container = document.getElementById("guide-sections");
