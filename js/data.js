@@ -186,7 +186,7 @@ const DISTRICT_CONFIG = Object.freeze({
     unconfirmed: "District confirmation needed"
   },
   targets: {
-    // Ten current project-owner decisions. None is a campus question.
+    // Nine confirmed district target settings. None is a campus question.
     reading_target: { label: "Grade 3 Reading Meets+", value: 32, format: "percentage" },
     math_target: { label: "Grade 3 Mathematics Meets+", value: 27, format: "percentage" },
     attendance_ada_target_pct: { label: "Attendance / ADA", value: 95, format: "percentage" },
@@ -195,7 +195,6 @@ const DISTRICT_CONFIG = Object.freeze({
     math_fidelity_target_pct: { label: "Mathematics Instructional Fidelity", value: 90, format: "percentage-plus" },
     improvement_milestones_target_pct: { label: "Improvement Milestones On Track", value: 90, format: "percentage-plus", suffix: " each review cycle" },
     enrollment_target: { label: "Enrollment", value: "N/A", format: "text" },
-    iss_target: { label: "In-School Suspension (ISS)", value: "Decrease from 2025-26 baseline", format: "text" },
     oss_target: { label: "Out-of-School Suspension (OSS)", value: "Decrease from 2025-26 baseline", format: "text" },
 
     // Six district decisions still pending. Replace only value when approved;
@@ -259,7 +258,6 @@ const CAMPUS_FIELDS = Object.freeze([
 
   { id: "chronic_absenteeism_baseline_pct", sourceId: "U13", group: "climate", label: "Chronic Absenteeism baseline (%)", type: "percentage", targetKey: "chronic_absenteeism_target_pct", required: true, enabled: true, help: "Enter the reported aggregate campus chronic absenteeism rate." },
 
-  { id: "iss_baseline_pct", sourceId: "U14-ISS", group: "climate", label: "2025-26 In-School Suspension (ISS) rate %", type: "percentage", targetKey: "iss_target", required: true, enabled: true, help: "Enter the reported aggregate campus ISS rate for 2025-26, from 0 to 100." },
   { id: "oss_baseline_pct", sourceId: "U14-OSS", group: "climate", label: "2025-26 Out-of-School Suspension (OSS) rate %", type: "percentage", targetKey: "oss_target", required: true, enabled: true, help: "Enter the reported aggregate campus OSS rate for 2025-26, from 0 to 100." },
 
   { id: "rla_fidelity_baseline_pct", sourceId: "U15", group: "implementation", label: "RLA Instructional Fidelity baseline (%)", type: "percentage", targetKey: "rla_fidelity_target_pct", required: true, enabled: true, help: "Use the approved observation rubric, monitored-classroom denominator, and reporting period." },
@@ -278,7 +276,7 @@ const SOURCE_BINDINGS = {
   U07: { input: "grade3_reading_meets_baseline_pct" }, U08: { input: "grade3_math_meets_baseline_pct" },
   U09: { input: "pk2_literacy_boy_baseline" }, U10: { input: "pk2_math_boy_baseline" },
   U11: { input: "domain1_baseline_score" }, U12: { district: "perception_baseline" },
-  U13: { input: "chronic_absenteeism_baseline_pct" }, U14: { inputs: ["iss_baseline_pct", "oss_baseline_pct"] },
+  U13: { input: "chronic_absenteeism_baseline_pct" }, U14: { input: "oss_baseline_pct" },
   U15: { input: "rla_fidelity_baseline_pct" }, U16: { input: "math_fidelity_baseline_pct" },
   U17: { input: "closing_gaps_baseline_score" }, U18: { input: "improvement_milestones_baseline_pct" },
   U19: { campusProperty: "submission_local_maintenance_status" },
@@ -289,7 +287,7 @@ const SOURCE_BINDINGS = {
   D08: { target: "math_target" }, D09: { target: "pk2_literacy_eoy_target" },
   D10: { target: "pk2_math_eoy_target" }, D11: { target: "domain1_target_score" },
   D12: { target: "priority_survey_target" }, D13: { target: "chronic_absenteeism_target_pct" },
-  D14: { targets: ["iss_target", "oss_target"] }, D15: { target: "closing_gaps_target_score" },
+  D14: { target: "oss_target" }, D15: { target: "closing_gaps_target_score" },
   D16: { input: "sce_allocation_amount" }, D17: { campusProperty: "campus_intervention_status" },
   D18: { campusProperty: "tea_identification_indicators" }, D19: { campusProperty: "board_approval_status" },
   C01: { targets: ["rla_fidelity_target_pct", "math_fidelity_target_pct"] },

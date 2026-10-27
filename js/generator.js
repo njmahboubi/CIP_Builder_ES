@@ -2,7 +2,8 @@
 
 (() => {
   // Source: reference/2026-27 SAMPLE Elementary CIP.docx.
-  // P/T locators match FIELD_MAP.md. Fixed language/action rows are retained;
+  // P/T keys are stable application IDs; current DOCX locators are in FIELD_MAP.md.
+  // Fixed language/action rows are retained;
   // controlled values are resolved once from the questionnaire and DISTRICT_CONFIG.
   const SOURCE = {
   "paragraphs": {
@@ -52,7 +53,7 @@
     "P253": "DOL evidence does not yet consistently lead to same-day instructional adjustment, second teach, or acceleration decisions.",
     "P254": "Teachers and leaders require continued content-specific rehearsal, coaching, and feedback focused on conceptual understanding, reasoning, problem solving, and gradual release.",
     "P255": "PK-2 foundational numeracy requires sustained Project Acceleration, frequent progress monitoring, and vertical alignment to Grade 3 expectations.",
-    "P324": "Campus Goal: The campus will increase student attendance, reduce chronic absenteeism, protect instructional time, and strengthen student/family engagement and support.",
+    "P324": "Campus Goal: The campus will increase student attendance, reduce chronic absenteeism, protect instructional time, and strengthen student/family engagement and support. Stakeholder feedback reinforces the importance of family communication, mentoring/community partnerships, student engagement, and supports that address barriers to regular attendance.",
     "P325": "District / Board Alignment: Beaumont ISD Board Outcome Goal 4: improve stakeholder perception by ensuring students are safe, supported, and able to develop self-management skills.",
     "P326": "Problem Statement: Attendance, chronic absenteeism, behavior, and inconsistent support can reduce instructional time and weaken student connection to school.",
     "P328": "Attendance outreach, intervention, and escalation are not yet implemented with sufficient consistency for all students requiring support.",
@@ -69,9 +70,9 @@
     "P463": "SCE resources will supplement the regular education program by providing allowable academic intervention, acceleration, attendance/dropout-prevention support, targeted staffing, tutoring, progress monitoring, and other services for students who are at risk of dropping out or who have not performed satisfactorily on required assessments. SCE-funded supports will be aligned to the campus CNA and the goals/strategies in this CIP. Finance/Federal Programs will validate final program coding, personnel allocations, and supplement-not-supplant requirements.",
     "P465": "District HR/Finance will pre-populate the final personnel roster in Plan4Learning. Campus leaders should validate that assigned SCE-funded personnel are accurately reflected.",
     "P476": "The campus comprehensive needs assessment (CNA) is developed through review of current and historical campus data, including student achievement and growth, attendance, discipline, demographics, staffing, special-program participation, implementation evidence, and stakeholder feedback. Campus leadership reviews multiple measures of data, identifies strengths and problem statements, determines root causes, and prioritizes needs aligned to Beaumont ISD Board Outcome Goals, Elevate Beaumont, and the BISD Instructional Playbook. The CNA informs the campus goals, strategies, resource alignment, and intervention priorities in this plan. Progress is reviewed during quarterly formative reviews and the CNA is refreshed annually using the most current available evidence.",
-    "P478": "Evidence of campus planning and stakeholder meetings, including agendas, dates, notes/minutes, and sign-in or attendance documentation, will be maintained in the district-approved Title I documentation repository (Title1Crate, if applicable) and/or the campus improvement-plan evidence folder. The campus principal will ensure documentation is available for district or TEA review upon request.",
+    "P478": "Evidence of campus planning and stakeholder engagement, including agendas, dates, notes/minutes, survey summaries, and sign-in or attendance documentation, will be maintained in the district-approved Title I documentation repository. Districtwide stakeholder evidence used to inform the 2026-27 plan includes Community Action Series Meeting #2 held September 15, 2026, with follow-up survey responses received through September 16, 2026.",
     "P480": "The campus plan is developed during the fall planning cycle using district-provided templates, current TEA/accountability data, local campus evidence, and district priorities. District and campus leaders validate campus-specific baselines and targets, review problem statements and root causes, confirm strategies and resources, and complete required stakeholder review before final approval. Quarterly formative reviews are used throughout the year to document implementation status, student progress, barriers, and required adjustments.",
-    "P482": "Campus staff, families, community members, and other required stakeholders participate in the campus planning process through the campus-level planning and decision-making structure, public/stakeholder meetings, surveys or feedback opportunities, and review of campus data and proposed improvement priorities. Feedback is used to validate needs, strengthen strategies, and identify barriers to implementation. Required stakeholder lists, roles, and evidence of participation are maintained with campus planning documentation.",
+    "P482": "Campus staff, families, community members, and other required stakeholders participate in the campus planning process through the campus-level planning and decision-making structure, public/stakeholder meetings, surveys, and districtwide engagement opportunities. For 2026-27 TIP/TAP documentation, Community Action Series Meeting #2 on September 15, 2026 will serve as the stakeholder-engagement event/date, with survey feedback submitted through September 16, 2026 retained as follow-up evidence. The plan reflects recurring themes rather than individual personnel complaints, student-specific information, or isolated campus concerns.",
     "P484": "The approved Campus Improvement Plan will be made available to staff, families, and the public through district/campus communication channels and the district website, as applicable. The campus will provide the plan or key information in an understandable and accessible format and will coordinate translation or language access when needed so families can meaningfully understand campus priorities and planned supports.",
     "P486": "The CIP coordinates campus improvement work with applicable federal, state, and local programs and resources, including Title I, State Compensatory Education, Title II, Title III, IDEA, school-improvement funds, student-support services, attendance interventions, and other district initiatives. Where the campus is identified for LIP, TIP, or TAP requirements, those requirements are integrated into the same campus improvement architecture so that compliance activities reinforce rather than compete with daily instructional improvement.",
     "P488": "The strategies in this CIP address the required Title I schoolwide elements through standards-aligned instruction, student progress monitoring, targeted academic intervention and acceleration, teacher/principal quality and development, parent/family engagement, transition supports, services for special populations, discipline monitoring, and coordination of federal/state/local resources. Plan4Learning strategy-level statutory descriptors should be selected to align each strategy with the applicable Title I requirement.",
@@ -80,7 +81,7 @@
     "P504": "This campus will use the same goals, root causes, strategies, and evidence in this CIP to satisfy applicable local or state/federal intervention requirements. Separate compliance fields should not create a different improvement strategy. The campus and district will maintain a single coherent improvement architecture aligned to Board goals, Elevate Beaumont, and the BISD Instructional Playbook.",
     "P515": "The campus will implement intensive curriculum and instruction improvements through the BISD instructional model, including district-provided curriculum, AIEF, structured PLC preparation, Demo Day rehearsal, DOL-driven differentiation, same-day second teach/acceleration, frequent classroom observation and coaching, attendance/student-support routines, and recurring campus performance reviews. These evidence-based interventions are expected to improve identified academic and accountability indicators by strengthening the quality and consistency of Tier 1 instruction, accelerating response to student evidence, and ensuring leaders intervene when implementation or outcomes are off trajectory.",
     "P517": "Progress will be monitored through quarterly formative reviews in Plan4Learning and through more frequent campus operational routines, including weekly PLCs, DOL/common-assessment reviews, classroom observations, attendance/intervention reviews, and campus leadership huddles. Campus and district leaders will review student outcomes, implementation evidence, staffing/attendance indicators, and intervention milestones, document assigned actions, and escalate differentiated support when the campus is off trajectory.",
-    "P518": "TIP/TAP-specific assurances, public meeting/hearing documentation, stakeholder evidence, cost/funding information, and final TEA identification indicators will be entered in the dedicated Plan4Learning TIP/TAP module when required.",
+    "P518": "TIP/TAP-specific assurances, public meeting/hearing documentation, stakeholder evidence, cost/funding information, and final TEA identification indicators will be entered in the dedicated Plan4Learning TIP/TAP module where applicable. Community Action Series Meeting #2 on September 15, 2026 will be used as the 2026-27 stakeholder-engagement date, with follow-up survey responses received September 16, 2026 retained as supporting feedback evidence.",
     "P521": "The following Plan4Learning areas are completed directly in the application and do not require separate narrative in this Word draft: Plan Checklist, Committees page, and read-only Policies page. The campus should use this document as the copy/paste source for narrative sections and goals, then complete application-only fields and checklists directly in Plan4Learning.",
     "P522": "Metric fields to validate before final entry: ",
     "P523": "Enrollment and student-group percentages",
@@ -94,7 +95,11 @@
     "P531": "Board approval date / required compliance dates",
     "P050_fixed": "These data will be reviewed alongside student achievement and implementation evidence to identify groups requiring differentiated academic, attendance, behavioral, or family supports.",
     "P090_fixed": "PK-2 literacy and mathematics growth will be monitored from BOY to EOY to ensure students are on trajectory for Grade 3 readiness.",
-    "P143_fixed": "The campus will monitor student, family, and staff perception data together with attendance, chronic absenteeism, discipline, and lost instructional time. "
+    "P143_fixed": "The campus will monitor student, family, and staff perception data together with attendance, chronic absenteeism, and out-of-school suspension (OSS) trends.",
+    "stakeholder-context": "Districtwide stakeholder input collected through the Superintendent Meet & Greet in June 2026, the Community Action Series beginning July 21, 2026, and Community Action Series Meeting #2 on September 15, 2026 identified recurring priorities related to family and community partnership, attendance barriers and supports, student belonging and engagement, behavior and student support, clear communication, staffing/support capacity, and access to enriching learning experiences. Individual personnel complaints, student-specific comments, and isolated campus concerns are not carried forward as plan findings unless they reflect a broader recurring theme.",
+    "stakeholder-implications": "Elementary planning implications include strengthening family communication and attendance outreach; expanding mentoring, volunteer, and community-partnership opportunities; protecting positive and respectful student-adult interactions; supporting student wellness and behavior; and maintaining engaging academic, fine arts, enrichment, and early-learning experiences that strengthen student connection to school.",
+    "stakeholder-problem": "Stakeholder feedback indicates a need for stronger, more consistent family/community partnerships and communication tied to attendance, student support, behavior expectations, and student success.",
+    "stakeholder-cause": "Families and community partners do not always experience clear, consistent pathways to understand district changes, support attendance and learning, volunteer or mentor, and connect students to available supports."
   },
   "tables": {
     "T02": [
@@ -262,12 +267,12 @@
         }
       ],
       [
-        "Discipline / Lost Instructional Time",
+        "2025-26 Out-of-School Suspension (OSS) rate",
         {
-          "field": "discipline_lost_time_baseline"
+          "field": "oss_baseline_pct"
         },
         {
-          "field": "discipline_lost_time_target"
+          "field": "oss_target"
         }
       ]
     ],
@@ -702,7 +707,7 @@
   "narratives": {
     "P050": "The campus serves [XX] students. [XX%] of students are economically disadvantaged, [XX%] are emergent bilingual, and [XX%] receive special education services. The campus attendance/ADA rate is [XX%], the mobility rate is [XX%], and the 2026 accountability rating/score is [XX]. These data will be reviewed alongside student achievement and implementation evidence to identify groups requiring differentiated academic, attendance, behavioral, or family supports.",
     "P090": "In 2026, the campus earned [XX%] Meets Grade Level or Above in Grade 3 Reading and [XX%] Meets Grade Level or Above in Grade 3 Mathematics. The campus Domain 1 / Student Achievement score was [XX]. For 2026-27, the campus will increase Grade 3 Reading to [XX%], Grade 3 Mathematics to [XX%], and Domain 1 / Student Achievement to [XX]. PK-2 literacy and mathematics growth will be monitored from BOY to EOY to ensure students are on trajectory for Grade 3 readiness.",
-    "P143": "The campus will monitor student, family, and staff perception data together with attendance, chronic absenteeism, discipline, and lost instructional time. The current priority survey baseline is [XX], chronic absenteeism is [XX%], and the campus will target [XX] on the priority survey indicator and [XX%] chronic absenteeism by spring 2027.",
+    "P143": "The campus will monitor student, family, and staff perception data together with attendance, chronic absenteeism, out-of-school suspension (OSS) trends. The current priority survey baseline is [XX], chronic absenteeism is [XX%], and the campus will target [XX] on the priority survey indicator and [XX%] chronic absenteeism by spring 2027.",
     "P194": "The campus earned [XX%] Meets Grade Level or Above in Grade 3 Reading in 2026 and will increase performance to [XX%] by spring 2027. The campus will also increase PK-2 literacy growth from [XX BOY] to [XX EOY] while reaching at least 90% fidelity to monitored RLA instructional expectations.",
     "P270": "The campus earned [XX%] Meets Grade Level or Above in Grade 3 Mathematics in 2026 and will increase performance to [XX%] by spring 2027. The campus will also increase PK-2 mathematics growth from [XX BOY] to [XX EOY] while reaching at least 90% fidelity to monitored mathematics instructional expectations.",
     "P346": "The campus ADA baseline is [XX%] and chronic absenteeism is [XX%]. By spring 2027, the campus will increase ADA to [XX%], reduce chronic absenteeism to [XX%], and improve the identified priority survey indicator from [XX] to [XX].",
@@ -868,17 +873,13 @@
     function sourceTable(id, caption, hasHeader = true) {
       const rows = SOURCE.tables[id].map((row, r) => row.map((cell, c) => {
         const override = targetOverrides[id] && targetOverrides[id][r + ":" + c];
-        // The source's generic numeric discipline row is replaced below.
-        if (id === "T17" && r === 3) return "";
         return override ? value(override) : typeof cell === "string" ? cell : value(cell.field);
       }));
       const suspensionRows = [
-        ["2025-26 In-School Suspension (ISS) rate", value("iss_baseline_pct"), value("iss_target")],
         ["2025-26 Out-of-School Suspension (OSS) rate", value("oss_baseline_pct"), value("oss_target")]
       ];
       if (id === "T17") {
         rows[1][0] = "District Stakeholder Perception Survey / Indicator";
-        rows.splice(3, 1, ...suspensionRows);
       }
       if (id === "T28") {
         rows[3][0] = "District Stakeholder Perception Survey / Indicator";
@@ -933,13 +934,19 @@
       metricLine("Chronic absenteeism baseline", "chronic_absenteeism_baseline_pct"),
       metricLine("Spring " + endYear + " chronic absenteeism target", "chronic_absenteeism_target_pct"),
       para("The district stakeholder perception indicator and chronic absenteeism will be reviewed toward their spring " + endYear + " targets."),
-      para("The 2025-26 In-School Suspension (ISS) rate is " + value("iss_baseline_pct") +
-        " and the Out-of-School Suspension (OSS) rate is " + value("oss_baseline_pct") +
-        ". The " + year + " ISS target is: " + value("iss_target") +
-        "; the OSS target is: " + value("oss_target") + ".")
+      para("The 2025-26 Out-of-School Suspension (OSS) rate is " + value("oss_baseline_pct") +
+        ". The " + year + " OSS target is: " + value("oss_target") + ".")
     ];
+    const stakeholderEvidence = [
+      heading("Stakeholder Engagement and Feedback"),
+      para("Engagement: Community Action Series Meeting #2. Date: September 15, 2026. Follow-up survey feedback continued September 16, 2026."),
+      fixed("stakeholder-context"),
+      para("Recurring themes identified through stakeholder feedback include family and community partnership; clear and proactive communication; attendance and barriers to attendance; student belonging and engagement; mentoring and volunteer opportunities; behavior and student support; safe and supportive learning environments; staffing/support capacity where relevant; and access to enrichment and engaging learning opportunities."),
+      fixed("stakeholder-implications")
+    ];
+    const publicReview = para("BISD may present the common Elementary goals, strategies, district resources, and implementation and action architecture together for public review as a shared Elementary improvement framework. Each applicable elementary campus must retain its own campus identity and campus-specific information in its final plan/submission, including campus name, TEA campus ID, accountability/identification status, baselines, campus-specific needs, required assurances, intervention/compliance fields, and Plan4Learning campus submission information, as applicable.");
     const perceptions = [
-      fixed("P129"), sourceTable("T17", "Perceptions campus metrics"),
+      ...stakeholderEvidence, fixed("P129"), sourceTable("T17", "Perceptions campus metrics"),
       fixed("P143_fixed"), ...perceptionNarrative
     ];
     function cnaGroup(id, title, summary, strengths, pairs) {
@@ -954,7 +961,7 @@
       cnaGroup("demographics", "Demographics", demographics, ["P053","P054","P055"], [["P058","P060"],["P063","P065"]]),
       cnaGroup("student-learning", "Student Learning", learning, ["P093","P094","P095"], [["P098","P100"],["P103","P105"]]),
       cnaGroup("school-processes", "School Processes & Programs", [fixed("P110")], ["P112","P113","P114"], [["P117","P119"],["P122","P124"]]),
-      cnaGroup("perceptions", "Perceptions", perceptions, ["P146","P147","P148"], [["P151","P153"]]),
+      cnaGroup("perceptions", "Perceptions", perceptions, ["P146","P147","P148"], [["P151","P153"],["stakeholder-problem","stakeholder-cause"]]),
       section("prioritized-problems", "Prioritized Problem Statements", [sourceTable("T20", "Prioritized problem statements, root causes, and goal alignment")], "Comprehensive Needs Assessment > Prioritized Problem Statements")
     ]);
     function goal(number, title, intro, causes, metrics, narrative, actions) {
@@ -1008,9 +1015,8 @@
       metricLine("District Stakeholder Perception Survey / Indicator", "perception_indicator_name"),
       metricLine("District stakeholder perception baseline", "perception_baseline"),
       metricLine("District stakeholder perception target", "priority_survey_target"),
-      para("The 2025-26 ISS baseline is " + value("iss_baseline_pct") + " and the OSS baseline is " +
-        value("oss_baseline_pct") + ". The " + year + " ISS target is: " + value("iss_target") +
-        "; the OSS target is: " + value("oss_target") + ".")
+      para("The 2025-26 Out-of-School Suspension (OSS) rate is " + value("oss_baseline_pct") +
+        ". The " + year + " OSS target is: " + value("oss_target") + ".")
     );
     const accountabilityParts = sentences("P419");
     const accountabilityNarrative = [para(fill(accountabilityParts[0], ["accountability_baseline_display","domain1_baseline_score","closing_gaps_baseline_score"]))];
@@ -1043,6 +1049,7 @@
         para("BEAUMONT ISD — " + year + " Elementary Campus Improvement Plan"),
         sourceTable("T02", "Campus identification", false), para(PERSONNEL_NOTE)
       ]),
+      section("public-review", "Shared Elementary Improvement Framework for Public Review", [publicReview], "Plan4Learning Entry Notes"),
       cna,
       goal(1, "Early Literacy", ["P172","P173","P174"], ["P176","P177","P178","P179"], "T22", readingNarrative, "T23"),
       goal(2, "Early Mathematics", ["P248","P249","P250"], ["P252","P253","P254","P255"], "T25", mathNarrative, "T26"),
@@ -1058,7 +1065,7 @@
         section("title1-personnel", year + " Title I Personnel", [fixed("P492"), para("Personnel roster completion: " + MARKER + ". " + PERSONNEL_NOTE)])
       ]),
       section("intervention", "LIP / TIP / TAP Alignment (as applicable)", [
-        fixed("P504"), sourceTable("T38", "Intervention status and identification", false)
+        fixed("P504"), publicReview, sourceTable("T38", "Intervention status and identification", false)
       ], "LIP / TIP / TAP Alignment", [
         section("intervention-strategy", "Standard Intervention Strategy Narrative", [fixed("P515")], "LIP / TIP / TAP Alignment"),
         section("intervention-monitoring", "Standard Progress-Monitoring Narrative", [fixed("P517"), fixed("P518")], "LIP / TIP / TAP Alignment")
@@ -1089,7 +1096,7 @@
     if (BAD_TOKEN.test(fullText) || /\[[^\]]*(?:XX|TARGET)[^\]]*\]/i.test(fullText)) throw new Error("Unresolved template token in generated content.");
     const sourceValues = Object.fromEntries(Object.entries(config.SOURCE_BINDINGS).map(([id, binding]) => {
       const display = binding.input ? value(binding.input)
-        : binding.inputs ? binding.inputs.map(key => (key === "iss_baseline_pct" ? "ISS: " : "OSS: ") + value(key)).join(" / ")
+        : binding.inputs ? binding.inputs.map(value).join(" / ")
         : binding.district ? value(binding.district)
         : binding.target ? value(binding.target)
         : binding.targets ? binding.targets.map(value).join(" / ")
